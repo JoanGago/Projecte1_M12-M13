@@ -1,0 +1,7 @@
+package borsa_joan_aleix;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface EmpresaRepositori extends JpaRepository<Empresa, Long> {
+
+}
