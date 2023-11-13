@@ -1,0 +1,79 @@
+package borsa_joan_aleix.rest;
+
+import java.util.List;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import borsa_joan_aleix.models.Empresa;
+import borsa_joan_aleix.models.Oferta;
+import borsa_joan_aleix.repository.EmpresaRepositori;
+import borsa_joan_aleix.repository.OfertaRepositori;
+
+@RestController
+@RequestMapping("/ofertes")
+public class ControladorOferta {
+    @Autowired
+    private OfertaRepositori ofertaRepositori;
+    
+    @Autowired
+    private EmpresaRepositori empresaRepositori;
+    
+    @PostMapping
+    public Oferta crearOferta(@RequestBody Oferta oferta) {
+        return ofertaRepositori.save(oferta);
+    }
+    
+    @GetMapping
+    public List<Oferta> obtenirOfertes() {
+        return ofertaRepositori.findAll();
+    }
+    
+    
+
+    @GetMapping("/empresa/{id}")
+    public ResponseEntity<List<Oferta>> obtenirOfertesPerEmpresa(@PathVariable Long id) {
+        java.util.Optional<Empresa> empresaOptional = empresaRepositori.findById(id);
+        if (empresaOptional.isPresent()) {
+            Empresa empresa = empresaOptional.get();
+            List<Oferta> ofertes = ofertaRepositori.findByEmpresa(empresa);
+            return ResponseEntity.ok(ofertes);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Oferta> actualitzarOferta(@PathVariable Long id, @RequestBody Oferta ofertaActualitzada) {
+        Oferta oferta = ofertaRepositori.findById(id).orElse(null);
+        if (oferta != null) {
+            oferta.setTitol(ofertaActualitzada.getTitol());
+
+            Oferta ofertaGuardada = ofertaRepositori.save(oferta);
+            return ResponseEntity.ok(ofertaGuardada);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarOferta(@PathVariable Long id) {
+        Oferta oferta = ofertaRepositori.findById(id).orElse(null);
+        if (oferta != null) {
+            ofertaRepositori.delete(oferta);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+}

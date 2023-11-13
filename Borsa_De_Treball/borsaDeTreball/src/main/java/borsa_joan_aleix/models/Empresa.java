@@ -1,9 +1,13 @@
 package borsa_joan_aleix.models;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Empresa {
@@ -13,12 +17,26 @@ public class Empresa {
     private String nom;
     private String descripcio;
     
+    
+
+	@OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Oferta> ofertes;
+    
     public Empresa() {}
     
-	public Empresa(Long id, String nom, String descripcio) {
+    public Empresa(Long id, String nom, String descripcio, List<Oferta> ofertes) {
 		this.id = id;
 		this.nom = nom;
 		this.descripcio = descripcio;
+		this.ofertes = ofertes;
+	}
+
+	public List<Oferta> getOfertes() {
+		return ofertes;
+	}
+
+	public void setOfertes(List<Oferta> ofertes) {
+		this.ofertes = ofertes;
 	}
 
 	public Long getId() {
