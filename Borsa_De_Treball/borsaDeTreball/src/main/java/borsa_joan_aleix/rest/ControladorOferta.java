@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import borsa_joan_aleix.models.Empresa;
 import borsa_joan_aleix.models.Oferta;
 import borsa_joan_aleix.repository.EmpresaRepositori;
+import borsa_joan_aleix.repository.OfertaRepositori;
 
 
 @RestController
@@ -33,7 +34,23 @@ public class ControladorOferta {
         return ofertaRepositori.save(oferta);
     }
     
+    @GetMapping
+    public List<Oferta> obtenirOfertes() {
+        return ofertaRepositori.findAll();
+    }
     
+    @GetMapping("/empresa/{id}")
+    public ResponseEntity<List<Oferta>> obtenirOfertesPerEmpresa(@PathVariable Long id) {
+        java.util.Optional<Empresa> empresaOptional = empresaRepositori.findById(id);
+        if (empresaOptional.isPresent()) {
+            Empresa empresa = empresaOptional.get();
+            List<Oferta> ofertes = ofertaRepositori.findByEmpresa(empresa);
+            return ResponseEntity.ok(ofertes);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     
     @PutMapping("/{id}")
     public ResponseEntity<Oferta> actualitzarOferta(@PathVariable Long id, @RequestBody Oferta ofertaActualitzada) {
@@ -43,6 +60,17 @@ public class ControladorOferta {
 
             Oferta ofertaGuardada = ofertaRepositori.save(oferta);
             return ResponseEntity.ok(ofertaGuardada);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarOferta(@PathVariable Long id) {
+        Oferta oferta = ofertaRepositori.findById(id).orElse(null);
+        if (oferta != null) {
+            ofertaRepositori.delete(oferta);
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }
