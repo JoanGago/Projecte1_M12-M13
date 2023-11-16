@@ -71,6 +71,7 @@ INDEX VERSION 1.134+C:\Users\Gerard\Documents\ProjectesGitHub\MediaTic\Projecte1
 2356403970.index
 3000708371.index
 3138911412.index
+1203420361.index
 4102946414.index
 1107971868.index
 1395218736.index
