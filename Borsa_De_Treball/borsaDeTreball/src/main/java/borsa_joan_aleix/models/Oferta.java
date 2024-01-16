@@ -14,54 +14,49 @@ public class Oferta {
     private Long id;
     private String titol;
     private String descripcio;
-    
-    
+
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
-    
-	public Oferta() {}
 
-	public Oferta(Long id, String titol, String descripcio, Empresa empresa) {
-		this.id = id;
-		this.titol = titol;
-		this.descripcio = descripcio;
-		this.empresa = empresa;
-	}
+    public Oferta() {}
 
-	public Long getId() {
-		return id;
-	}
+    public Oferta(Long id, String titol, String descripcio, Empresa empresa) {
+        this.id = id;
+        this.titol = titol;
+        this.descripcio = descripcio;
+        this.empresa = empresa;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getTitol() {
-		return titol;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setTitol(String titol) {
-		this.titol = titol;
-	}
+    public String getTitol() {
+        return titol;
+    }
 
-	public String getDescripcio() {
-		return descripcio;
-	}
+    public void setTitol(String titol) {
+        this.titol = titol;
+    }
 
-	public void setDescripcio(String descripcio) {
-		this.descripcio = descripcio;
-	}
+    public String getDescripcio() {
+        return descripcio;
+    }
 
-	public Empresa getEmpresa() {
-		return empresa;
-	}
+    public void setDescripcio(String descripcio) {
+        this.descripcio = descripcio;
+    }
 
-	public void setEmpresa(Empresa empresa) {
-		this.empresa = empresa;
-	}
-	
-	
-    
-    
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
 }
