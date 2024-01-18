@@ -11,4 +11,5 @@ import borsa_joan_aleix.models.Oferta;
 @Repository
 public interface OfertaRepositori extends JpaRepository<Oferta, Long> {
     List<Oferta> findByEmpresa(Empresa empresa);
+    List<Oferta> findByEmpresaIsNull();
 }

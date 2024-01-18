@@ -1,0 +1,72 @@
+package borsa_joan_aleix.security;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+public class SecurityConfig {
+	
+	@Autowired
+	private JwtFilter jwtFilter;
+	
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
+	
+	@Bean
+	public AuthenticationManager authManager(HttpSecurity http,
+											PasswordEncoder passwordEncoder,
+											UserDetailsService userDetailsService) throws Exception {
+		
+		return http.getSharedObject(AuthenticationManagerBuilder.class)
+				.userDetailsService(userDetailsService)
+				.passwordEncoder(passwordEncoder)
+				.and().build();
+	}
+	
+	
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http.csrf(csrf -> csrf.disable()).sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		
+		http.authorizeHttpRequests()
+				.requestMatchers("/auth/**").permitAll()
+				.anyRequest()
+				.authenticated();
+		
+		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+		
+		return http.build();
+	}
+	
+	/*
+	 * @Bean public UserDetailsService userDetailsService(){
+	 * 
+	 * var userDetailsService = new InMemoryUserDetailsManager();
+	 * 
+	 * UserDetails user1 = User.builder() .username("postman")
+	 * .password(this.passwordEncoder().encode("admin")) .authorities("read")
+	 * .build();
+	 * 
+	 * UserDetails user2 = User.builder() .username("browser")
+	 * .password(this.passwordEncoder().encode("admin")) .authorities("read")
+	 * .build();
+	 * 
+	 * userDetailsService.createUser(user1); userDetailsService.createUser(user2);
+	 * 
+	 * return userDetailsService; }
+	 * 
+	 * @Bean public PasswordEncoder passwordEncoder(){ return new
+	 * BCryptPasswordEncoder(); }
+	 */
+}
